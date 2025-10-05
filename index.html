@@ -5,30 +5,34 @@
 <title>Ayush's Number Checker</title>
 <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@600&family=Playfair+Display:wght@600&display=swap" rel="stylesheet">
 <style>
-    /* Reset */
     * { box-sizing: border-box; margin: 0; padding: 0; }
 
-    /* Body & animated background */
+    /* Body & background */
     body {
         margin: 0;
-        padding: 0;
         min-height: 100vh;
         font-family: 'Playfair Display', serif;
         background: #0a0a0a;
-        overflow: hidden;
+        overflow-x: hidden;
+        overflow-y: auto;
         display: flex;
         justify-content: center;
-        align-items: center;
+        align-items: center; /* ✅ Perfect vertical centering */
         color: #fff;
+        padding: 2rem 0;
+    }
+
+    p {
+        font-family: 'Playfair Display', serif;
+        font-size: 25px;
+        text-shadow: 0 0 15px rgb(0, 72, 255);
     }
 
     /* Floating numbers animation */
     .number-rain {
-        position: absolute;
-        top: 0;
-        left: 0;
-        width: 100%;
-        height: 100%;
+        position: fixed;
+        top: 0; left: 0;
+        width: 100%; height: 100%;
         pointer-events: none;
         overflow: hidden;
         z-index: 0;
@@ -38,14 +42,14 @@
         position: absolute;
         font-family: 'Orbitron', monospace;
         font-size: 20px;
-        opacity: 0.15; /* increased brightness */
+        opacity: 0.2;
         color: #0ff;
         animation: fall linear infinite;
     }
 
     @keyframes fall {
         0% { transform: translateY(-100%); opacity: 0.15; }
-        50% { opacity: 0.25; }
+        50% { opacity: 0.3; }
         100% { transform: translateY(110vh); opacity: 0.15; }
     }
 
@@ -58,10 +62,10 @@
         padding: 3rem;
         border-radius: 20px;
         box-shadow: 0 8px 32px rgba(0,255,255,0.2);
-        max-width: 500px;
-        width: 90%;
+        width: min(85%, 800px);
         text-align: center;
         transition: all 0.3s ease;
+        transform-origin: center;
     }
 
     h1 {
@@ -74,9 +78,9 @@
 
     input[type="number"] {
         width: 70%;
-        padding: 0.6rem;
+        padding: 0.8rem;
         margin-top: 1rem;
-        font-size: 1.2rem;
+        font-size: 1.3rem;
         border: none;
         border-radius: 10px;
         outline: none;
@@ -89,11 +93,11 @@
     }
 
     button {
-        padding: 0.8rem 1.5rem;
-        margin: 0.5rem;
-        font-size: 1rem;
+        padding: 1rem 1.6rem;
+        margin: 0.6rem;
+        font-size: clamp(1.1rem, 2.9vw, 1.8rem);
         border: none;
-        border-radius: 12px;
+        border-radius: 18px;
         cursor: pointer;
         background: rgba(0,255,255,0.1);
         color: #0ff;
@@ -113,20 +117,40 @@
         box-shadow: 0 0 10px #0ff inset;
     }
 
-    /* Responsive typography and layout */
-    @media (max-width: 768px) {
-        .container { padding: 2rem; }
-        h1 { font-size: 2rem; }
-        input[type="number"] { width: 80%; font-size: 1.1rem; }
-        button { font-size: 0.95rem; padding: 0.7rem 1.2rem; }
+    /* ✅ Scale everything proportionally for mobile */
+    @media (max-width: 768px) and (orientation: portrait) {
+        .container {
+            width: 94%;
+            padding: 2.5rem 1.5rem;
+            transform: scale(1.15); /* zoom in container */
+        }
+        .container * {
+            transform: scale(1.1); /* scale inner content */
+            transform-origin: center;
+        }
+        h1 { font-size: 2.3rem; }
+        input[type="number"] { width: 90%; font-size: 1.4rem; }
+        button { font-size: 1.2rem; padding: 1rem 1.8rem; }
     }
 
-    @media (max-width: 480px) {
-        .container { padding: 1.5rem; }
-        h1 { font-size: 1.6rem; }
-        input[type="number"] { width: 90%; font-size: 1rem; }
-        button { font-size: 0.9rem; padding: 0.6rem 1rem; }
+    @media (max-width: 480px) and (orientation: portrait) {
+        .container {
+            width: 92%;
+            padding: 2.3rem 1.2rem;
+            transform: scale(1.25);
+        }
+        .container * {
+            transform: scale(1.2);
+        }
+        h1 { font-size: 2rem; }
+        input[type="number"] { width: 95%; font-size: 1.3rem; }
+        button { font-size: 1.1rem; padding: 0.9rem 1.5rem; }
     }
+
+    /* Tablets and laptops
+    @media (min-width: 1000px) {
+        .container { transform: scale(1.05); }
+    }*/
 </style>
 </head>
 <body>
@@ -136,105 +160,83 @@
 <div class="container">
     <h1>Enter a Number</h1>
     <input type="number" id="N"><br><br>
+    <p id="d"> </p>
+    <br><br>
     <button onclick="prime()">Check Prime</button>
-    <button onclick="checkComposite()">Check Composite</button><br><br>
+    <button onclick="checkComposite()">Check Composite</button>
     <button onclick="even()">Check Even</button>
-    <button onclick="checkNeon()">Check Neon</button><br><br>
+    <button onclick="checkNeon()">Check Neon</button>
     <button onclick="checkPerfect()">Check Perfect</button>
-    <button onclick="checkAutomorphic()">Check Automorphic</button><br><br>
+    <button onclick="checkAutomorphic()">Check Automorphic</button>
     <button onclick="checkPronic()">Check Pronic</button>
-    <button onclick="checkAbundant()">Check Abundant</button><br><br>
+    <button onclick="checkAbundant()">Check Abundant</button>
     <button onclick="checkNiven()">Check Niven</button>
     <button onclick="checkBuzz()">Check Buzz</button>
 </div>
 
 <script>
-    // Floating number generation
+    // Floating number animation
     const rain = document.getElementById('numberRain');
-    for(let i=0;i<120;i++){ // more numbers for better visibility
+    for (let i = 0; i < 120; i++) {
         let num = document.createElement('div');
         num.classList.add('number');
-        num.textContent = Math.floor(Math.random()*10);
-        num.style.left = Math.random()*100+'%';
-        num.style.fontSize = Math.random()*25 + 15 + 'px';
-        num.style.animationDuration = (5+Math.random()*10)+'s';
-        num.style.animationDelay = Math.random()*5+'s';
+        num.textContent = Math.floor(Math.random() * 10);
+        num.style.left = Math.random() * 100 + '%';
+        num.style.fontSize = Math.random() * 25 + 15 + 'px';
+        num.style.animationDuration = (5 + Math.random() * 10) + 's';
+        num.style.animationDelay = Math.random() * 5 + 's';
         rain.appendChild(num);
     }
 
     // Number checker functions
     function prime() {
-        let a = document.getElementById("N").value;
-        let c = 0;
-        for (let i = 1; i <= a; i++) if(a % i == 0) c++;
-        alert(c == 2 ? "Number "+a+" is prime." : "Number "+a+" is not prime.");
+        let a = document.getElementById("N").value, c = 0;
+        for (let i = 1; i <= a; i++) if (a % i == 0) c++;
+        document.getElementById("d").textContent = (c == 2 ? "Number " + a + " is prime." : "Number " + a + " is not prime.");
     }
-
     function even() {
         let a = document.getElementById("N").value;
-        alert(a % 2 == 0 ? "Number "+a+" is even." : "Number "+a+" is not even.");
+        document.getElementById("d").textContent = (a % 2 == 0 ? "Number " + a + " is even." : "Number " + a + " is not even.");
     }
-
     function checkComposite() {
-        let a = document.getElementById("N").value;
-        let c = 0;
-        for (let i = 1; i <= a; i++) if(a % i == 0) c++;
-        alert(c > 2 ? "Number "+a+" is composite." : "Number "+a+" is not composite.");
+        let a = document.getElementById("N").value, c = 0;
+        for (let i = 1; i <= a; i++) if (a % i == 0) c++;
+        document.getElementById("d").textContent = (c > 2 ? "Number " + a + " is composite." : "Number " + a + " is not composite.");
     }
-
-    function palindrome() {
-        let a = document.getElementById("N").value;
-        let rev=0, i=a, d;
-        while(i!=0){d=i%10; rev=rev*10+d; i=Math.floor(i/10);}
-        alert(rev==a ? "Number "+a+" is palindrome." : "Number "+a+" is not palindrome.");
-    }
-
     function checkNeon() {
-        let a=document.getElementById("N").value;
-        let square=a*a, sum=0, i=square, d;
-        while(i!=0){d=i%10; sum+=d; i=Math.floor(i/10);}
-        alert(sum==a ? "Number "+a+" is neon!" : "Number "+a+" is not neon!");
+        let a = document.getElementById("N").value, square = a * a, sum = 0, i = square;
+        while (i != 0) { sum += i % 10; i = Math.floor(i / 10); }
+        document.getElementById("d").textContent = (sum == a ? "Number " + a + " is neon!" : "Number " + a + " is not neon!");
     }
-
     function checkPerfect() {
-        let a=document.getElementById("N").value;
-        let sum=0;
-        for(let i=1;i<a;i++) if(a%i==0) sum+=i;
-        alert(sum==a ? "Number "+a+" is perfect!" : "Number "+a+" is not perfect!");
+        let a = document.getElementById("N").value, sum = 0;
+        for (let i = 1; i < a; i++) if (a % i == 0) sum += i;
+        document.getElementById("d").textContent = (sum == a ? "Number " + a + " is perfect!" : "Number " + a + " is not perfect!");
     }
-
     function checkAutomorphic() {
-        let a=document.getElementById("N").value;
-        let square=a*a;
-        let digits=a.toString().length;
-        let divisor=Math.pow(10,digits);
-        alert(square%divisor==a ? "Number "+a+" is automorphic!" : "Number "+a+" is not automorphic!");
+        let a = document.getElementById("N").value;
+        let square = a * a, digits = a.toString().length;
+        let divisor = Math.pow(10, digits);
+        document.getElementById("d").textContent = (square % divisor == a ? "Number " + a + " is automorphic!" : "Number " + a + " is not automorphic!");
     }
-
     function checkPronic() {
-        let a=document.getElementById("N").value;
-        let f=false;
-        for(let i=1;i<=a;i++){if(i*(i+1)==a){f=true; break;}}
-        alert(f ? "Number "+a+" is pronic!" : "Number "+a+" is not pronic!");
+        let a = document.getElementById("N").value, f = false;
+        for (let i = 1; i <= a; i++) { if (i * (i + 1) == a) { f = true; break; } }
+        document.getElementById("d").textContent = (f ? "Number " + a + " is pronic!" : "Number " + a + " is not pronic!");
     }
-
     function checkAbundant() {
-        let a=document.getElementById("N").value;
-        let sum=0;
-        for(let i=1;i<a;i++){if(a%i==0) sum+=i;}
-        alert(sum>a ? "Number "+a+" is abundant!" : "Number "+a+" is not abundant!");
+        let a = document.getElementById("N").value, sum = 0;
+        for (let i = 1; i < a; i++) if (a % i == 0) sum += i;
+        document.getElementById("d").textContent = (sum > a ? "Number " + a + " is abundant!" : "Number " + a + " is not abundant!");
     }
-
     function checkNiven() {
-        let a=document.getElementById("N").value;
-        let sum=0, i=a, d;
-        while(i!=0){d=i%10; sum+=d; i=Math.floor(i/10);}
-        alert(a%sum==0 ? "Number "+a+" is niven!" : "Number "+a+" is not niven!");
+        let a = document.getElementById("N").value, sum = 0, i = a;
+        while (i != 0) { sum += i % 10; i = Math.floor(i / 10); }
+        document.getElementById("d").textContent = (a % sum == 0 ? "Number " + a + " is niven!" : "Number " + a + " is not niven!");
     }
-
     function checkBuzz() {
-        let a=document.getElementById("N").value;
-        alert(a%10==7 || a%7==0 ? "Number "+a+" is buzz!" : "Number "+a+" is not buzz!");
+        let a = document.getElementById("N").value;
+        document.getElementById("d").textContent = (a % 10 == 7 || a % 7 == 0 ? "Number " + a + " is buzz!" : "Number " + a + " is not buzz!");
     }
 </script>
 
